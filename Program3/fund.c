@@ -30,30 +30,84 @@ to 0. (n may include decimal places)
 2. The yearly percent rate, p, as an integer where p is greater than zero.
 */
 #include <stdio.h>
+#include <math.h>
 
 int main()
 {
-    double fund;
-    int rate, interest, scholarships1000, scholarships500, scholarships250;
+    double fund, rate, interest, available;
+    int num_1000 = 0, num_500 = 0, num_250 = 0;
 
-    // Get user input
-    printf("How much was in the fund last year?\n");
+    // Get input values
+    printf("How much was in the fund last year? ");
     scanf("%lf", &fund);
-    printf("What is the yearly percentage rate?\n");
-    scanf("%d", &rate);
+    printf("What is the yearly percentage rate? ");
+    scanf("%lf", &rate);
 
-    // Calculate interest and scholarships
-    interest = (int)(fund * rate / 100);
-    scholarships1000 = interest / 1000;
-    interest %= 1000;
-    scholarships500 = interest / 500;
-    interest %= 500;
-    scholarships250 = interest / 250;
+    // Calculate interest and available scholarship funds
+    interest = fund * rate / 100.0;
 
-    // Output results
-    printf("%d $1000 scholarships will be awarded.\n", scholarships1000);
-    printf("%d $500 scholarships will be awarded.\n", scholarships500);
-    printf("%d $250 scholarships will be awarded.\n", scholarships250);
+    printf("available fund: %.2lf \n", interest);
+
+    // case 1: The available fund is bigger than $10,000
+    if (interest > 10000)
+    {
+        available = interest - 10000;
+        num_1000 = 5;
+        num_500 = 10;
+
+        while (available >= 250)
+        {
+            available = available - 250;
+            num_250++;
+        }
+    }
+
+    else if (interest >= 5000 && interest <= 10000)
+    {
+        // case 2: The available fund is between $5,000 and $10,000
+        available = interest - 5000;
+        num_1000 = 5;
+
+        while (num_500 <= 10 && available > 500)
+        {
+            available = available - 500;
+            num_500++;
+        }
+
+        while (available >= 250)
+        {
+            available = available - 250;
+            num_250++;
+        }
+    }
+    else if (interest < 5000)
+    {
+        // case 3: The available fund is less than $5,000
+        available = interest;
+
+        while (available >= 1000)
+        {
+            available = available - 1000;
+            num_1000++;
+        }
+
+        while (available >= 500)
+        {
+            available = available - 500;
+            num_500++;
+        }
+
+        while (available >= 250)
+        {
+            available = available - 250;
+            num_250++;
+        }
+    }
+
+    // Print results
+    printf("%d $1000 scholarships will be awarded.\n", num_1000);
+    printf("%d $500 scholarships will be awarded.\n", num_500);
+    printf("%d $250 scholarships will be awarded.\n", num_250);
 
     return 0;
 }
